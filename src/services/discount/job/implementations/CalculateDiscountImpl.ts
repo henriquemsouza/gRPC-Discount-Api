@@ -78,7 +78,7 @@ export default class CalculateDiscountImpl extends CalculateDiscount {
       }
     }
 
-    if (isBlackFriday) {
+    if (isBlackFriday()) {
       this.buildGift(products);
     }
 

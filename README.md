@@ -33,7 +33,15 @@ yarn build
 ```sh
 yarn start
 ```
+## Test:
+
+```sh
+yarn test
+```
+
+
 To test the project you will need import the proto's on [BloomRPC](https://github.com/uw-labs/bloomrpc) 
+
 
 ***
 ### Made with:
