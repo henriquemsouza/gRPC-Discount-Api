@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package discount;
+
+// Service that return mocked discount percentage.
+service DiscountService {
+  rpc GetDiscount(DiscountRequest) returns (Discount) {}
+  rpc GetDiscountStreamRequest (stream DiscountRequest) returns (Discount) {}
+  rpc GetDiscountStreamResponse (DiscountRequest) returns (stream Discount) {}
+  rpc GetDiscountStream (stream DiscountRequest) returns (stream Discount) {}
+}
+
+// productID used to represent a product. Ilustrative only.
+message DiscountRequest {
+  int32 productID = 1;
+}
+
+message Product {
+  int32 id = 1;
+  float quantity = 2;
+          int32 unit_amount = 3;
+        int32 total_amount = 4;
+        int32 discount = 5;
+        bool is_gift = 6;
+}
+
+// The discount percentage is a fixed value.
+message Discount {
+  repeated Product products = 1;
+  float percentage = 2;
+  uint32 total_amount = 3;
+  uint32 total_amount_with_discount = 4;
+  uint32 total_discount = 5;
+}
