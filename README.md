@@ -11,3 +11,25 @@ docker-compose up
 ```
 ***
 
+## Installation without docker:
+
+```sh
+yarn
+```
+
+## Build:
+#### 1. Generate protos:
+```sh
+yarn build:proto
+```
+#### 2. build executable
+
+```sh
+yarn build
+```
+
+## Run:
+
+```sh
+yarn start
+```
