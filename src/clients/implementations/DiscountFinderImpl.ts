@@ -40,6 +40,6 @@ export class DiscountFinderImpl implements DiscountFinder {
   }
 
   private calculateDiscount(value: GetDiscountResponse): number {
-    return Math.round((value.getPercentage() as number) * 100) / 100;
+    return Math.round((value.getPercentage()) * 100) / 100;
   }
 }

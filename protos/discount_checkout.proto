@@ -10,6 +10,10 @@ service DiscountService {
 }
 
 message DiscountRequest {
+  repeated ProductRequest products = 4;
+}
+
+message ProductRequest {
   int32 productID = 1;
   int32 quantity = 2;
 }
@@ -25,9 +29,8 @@ message Product {
 
 // The discount percentage is a fixed value.
 message Discount {
-  repeated Product products = 1;
-  float percentage = 2;
-  uint32 total_amount = 3;
-  uint32 total_amount_with_discount = 4;
-  uint32 total_discount = 5;
+  uint32 total_amount = 1;
+  uint32 total_amount_with_discount = 2;
+  uint32 total_discount = 3;
+  repeated Product products = 4;
 }

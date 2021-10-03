@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   sendUnaryData, ServerDuplexStream,
   ServerReadableStream, ServerUnaryCall,
@@ -19,15 +20,13 @@ class DiscountCheckout implements IDiscountServiceServer {
   [method: string]: UntypedHandleCall;
 
   public async getDiscountCheckout(call: ServerUnaryCall<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): Promise<void> {
-    const productId = call.request.getProductid();
-    const quantity = call.request.getQuantity();
+    const productsRequest = call.request.getProductsList();
+    // const productIds = productsRequest.map((x) => x.getProductid());
+    // const quantity = call.request.getQuantity();
 
-    const pr = await container.resolve(CalculateDiscountImpl).calculate(productId, quantity);
+    const discount = await container.resolve(CalculateDiscountImpl).calculate(productsRequest);
 
-    console.log(`${new Date().toISOString()}    DiscountCheckout:getDiscountCheckout:`, pr);
-    const res = new Discount();
-    res.setPercentage(1);
-    callback(null, res);
+    callback(null, discount);
   }
 
   public getDiscountCheckoutStreamRequest(call: ServerReadableStream<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): void {
@@ -35,11 +34,11 @@ class DiscountCheckout implements IDiscountServiceServer {
 
     // const data: string[] = [];
     call.on('data', (req: DiscountRequest) => {
-      console.log('id', req.getProductid());
+      console.log('id', req);
       // data.push(`${req.getProductid()} - ${randomBytes(5).toString('hex')}`);
     }).on('end', () => {
       const res = new Discount();
-      res.setPercentage(1);
+      // res.setPercentage(1);
 
       callback(null, res);
     }).on('error', (err: Error) => {
@@ -50,11 +49,11 @@ class DiscountCheckout implements IDiscountServiceServer {
   public getDiscountCheckoutStreamResponse(call: ServerWritableStream<DiscountRequest, Discount>): void {
     logger.info('DiscountCheckout:getDiscountCheckoutStreamResponse', call.request.toObject());
 
-    const name = call.request.getProductid();
-
+    const name = call.request;
     for (const text of Array(10).fill('').map(() => randomBytes(5).toString('hex'))) {
+      console.log(text, name);
       const res = new Discount();
-      res.setPercentage(`${name} - ${text}`.length);
+      // res.setPercentage(`${name} - ${text}`.length);
       call.write(res);
     }
     call.end();
@@ -64,8 +63,9 @@ class DiscountCheckout implements IDiscountServiceServer {
     logger.info('DiscountCheckout:getDiscountCheckoutStream:', call.getPeer());
 
     call.on('data', (req: DiscountRequest) => {
+      console.log(req);
       const res = new Discount();
-      res.setPercentage(`${req.getProductid()} - ${randomBytes(5).toString('hex')}`.length);
+      // res.setPercentage(`${req.getProductid()} - ${randomBytes(5).toString('hex')}`.length);
       call.write(res);
     }).on('end', () => {
       call.end();
