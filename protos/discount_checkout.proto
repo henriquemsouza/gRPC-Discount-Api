@@ -4,8 +4,6 @@ package discount_checkout;
 
 service DiscountService {
   rpc GetDiscountCheckout(DiscountRequest) returns (Discount) {}
-  rpc GetDiscountCheckoutStreamRequest (stream DiscountRequest) returns (Discount) {}
-  rpc GetDiscountCheckoutStreamResponse (DiscountRequest) returns (stream Discount) {}
   rpc GetDiscountCheckoutStream (stream DiscountRequest) returns (stream Discount) {}
 }
 
@@ -27,7 +25,6 @@ message Product {
   bool is_gift = 6;
 }
 
-// The discount percentage is a fixed value.
 message Discount {
   uint32 total_amount = 1;
   uint32 total_amount_with_discount = 2;
