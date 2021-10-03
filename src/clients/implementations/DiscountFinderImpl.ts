@@ -26,6 +26,7 @@ export class DiscountFinderImpl implements DiscountFinder {
   }
 
   private async findDiscount(client: DiscountClient, productId: number): Promise<number> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, _reject) => client.getDiscount(
       new GetDiscountRequest().setProductid(productId), (error, value) => {
         if (error) {

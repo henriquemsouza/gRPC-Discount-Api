@@ -15,7 +15,7 @@ import { DiscountServiceService, IDiscountServiceServer } from '@models/discount
 import { Discount, DiscountRequest } from '@models/discount_checkout_pb';
 import CalculateDiscountImpl from './job/implementations/CalculateDiscountImpl';
 
-class Discounter implements IDiscountServiceServer {
+class DiscountCheckout implements IDiscountServiceServer {
   [method: string]: UntypedHandleCall;
 
   public async getDiscountCheckout(call: ServerUnaryCall<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): Promise<void> {
@@ -24,14 +24,14 @@ class Discounter implements IDiscountServiceServer {
 
     const pr = await container.resolve(CalculateDiscountImpl).calculate(productId, quantity);
 
-    console.log(`${new Date().toISOString()}    Discounter:getDiscountCheckout:`, pr);
+    console.log(`${new Date().toISOString()}    DiscountCheckout:getDiscountCheckout:`, pr);
     const res = new Discount();
     res.setPercentage(1);
     callback(null, res);
   }
 
   public getDiscountCheckoutStreamRequest(call: ServerReadableStream<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): void {
-    logger.info('Discounter:getDiscountCheckoutStreamRequest', call.getPeer());
+    logger.info('DiscountCheckout:getDiscountCheckoutStreamRequest', call.getPeer());
 
     // const data: string[] = [];
     call.on('data', (req: DiscountRequest) => {
@@ -48,7 +48,7 @@ class Discounter implements IDiscountServiceServer {
   }
 
   public getDiscountCheckoutStreamResponse(call: ServerWritableStream<DiscountRequest, Discount>): void {
-    logger.info('Discounter:getDiscountCheckoutStreamResponse', call.request.toObject());
+    logger.info('DiscountCheckout:getDiscountCheckoutStreamResponse', call.request.toObject());
 
     const name = call.request.getProductid();
 
@@ -61,7 +61,7 @@ class Discounter implements IDiscountServiceServer {
   }
 
   public getDiscountCheckoutStream(call: ServerDuplexStream<DiscountRequest, Discount>): void {
-    logger.info('Discounter:getDiscountCheckoutStream:', call.getPeer());
+    logger.info('DiscountCheckout:getDiscountCheckoutStream:', call.getPeer());
 
     call.on('data', (req: DiscountRequest) => {
       const res = new Discount();
@@ -76,6 +76,6 @@ class Discounter implements IDiscountServiceServer {
 }
 
 export {
-  Discounter,
+  DiscountCheckout,
   DiscountServiceService,
 };

@@ -4,9 +4,13 @@ import { Discount } from '@services/discount';
 
 import { LocalhostUrl } from '@utils/infra/utils';
 import { logger } from '@utils/logger';
-import { Discounter, DiscountServiceService } from './services/discount/Discounter';
+import {
+  DiscountCheckout,
+  DiscountServiceService as DiscountCheckoutService,
+} from '@services/discount/DiscountCheckout';
 
-import { Health, HealthService, healthStatus, ServingStatus } from './services/Health';
+import { HealthService } from '@models/health_grpc_pb';
+import { Health, healthStatus, ServingStatus } from '@services/Health';
 
 const server = new Server({
   'grpc.max_receive_message_length': -1,
@@ -14,7 +18,7 @@ const server = new Server({
 });
 
 server.addService(HealthService, new Health());
-server.addService(DiscountServiceService, new Discounter());
+server.addService(DiscountCheckoutService, new DiscountCheckout());
 server.addService(DiscountService, new Discount());
 
 server.bindAsync(
