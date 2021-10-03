@@ -1,0 +1,21 @@
+version: "3.6"
+
+services:
+  mock:
+    image: hashorg/hash-mock-discount-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: $PWD
+    entrypoint: ./scripts/entrypoint.sh
+    command: ./scripts/start.sh
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    network_mode: host
+    volumes:
+      - $PWD:$PWD
+
