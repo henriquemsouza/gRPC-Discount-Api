@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package discount_checkout;
+
+service DiscountService {
+  rpc GetDiscountCheckout(DiscountRequest) returns (Discount) {}
+  rpc GetDiscountCheckoutStreamRequest (stream DiscountRequest) returns (Discount) {}
+  rpc GetDiscountCheckoutStreamResponse (DiscountRequest) returns (stream Discount) {}
+  rpc GetDiscountCheckoutStream (stream DiscountRequest) returns (stream Discount) {}
+}
+
+message DiscountRequest {
+  int32 productID = 1;
+  int32 quantity = 2;
+}
+
+message Product {
+  int32 id = 1;
+  int32 quantity = 2;
+  int32 unit_amount = 3;
+  int32 total_amount = 4;
+  int32 discount = 5;
+  bool is_gift = 6;
+}
+
+// The discount percentage is a fixed value.
+message Discount {
+  repeated Product products = 1;
+  float percentage = 2;
+  uint32 total_amount = 3;
+  uint32 total_amount_with_discount = 4;
+  uint32 total_discount = 5;
+}

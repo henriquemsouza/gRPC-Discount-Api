@@ -10,25 +10,28 @@ import { randomBytes } from 'crypto';
 import { logger } from '@utils/logger';
 import { ServiceError } from '@utils/error';
 import container from '@shared/app/DI/container/inversify.config';
-import { Discount, DiscountRequest } from '../../../models/discount_pb';
 
-import { DiscountServiceService, IDiscountServiceServer } from '../../../models/discount_grpc_pb';
+import { DiscountServiceService, IDiscountServiceServer } from '@models/discount_checkout_grpc_pb';
+import { Discount, DiscountRequest } from '@models/discount_checkout_pb';
 import CalculateDiscountImpl from './job/implementations/CalculateDiscountImpl';
 
 class Discounter implements IDiscountServiceServer {
   [method: string]: UntypedHandleCall;
 
-  public getDiscount(_call: ServerUnaryCall<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): void {
-    const pr = container.resolve(CalculateDiscountImpl).calculate(1);
+  public async getDiscountCheckout(call: ServerUnaryCall<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): Promise<void> {
+    const productId = call.request.getProductid();
+    const quantity = call.request.getQuantity();
 
-    console.log(`${new Date().toISOString()}    Discounter:getDiscount:`, pr);
+    const pr = await container.resolve(CalculateDiscountImpl).calculate(productId, quantity);
+
+    console.log(`${new Date().toISOString()}    Discounter:getDiscountCheckout:`, pr);
     const res = new Discount();
     res.setPercentage(1);
     callback(null, res);
   }
 
-  public getDiscountStreamRequest(call: ServerReadableStream<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): void {
-    logger.info('Discounter:getDiscountStreamRequest', call.getPeer());
+  public getDiscountCheckoutStreamRequest(call: ServerReadableStream<DiscountRequest, Discount>, callback: sendUnaryData<Discount>): void {
+    logger.info('Discounter:getDiscountCheckoutStreamRequest', call.getPeer());
 
     // const data: string[] = [];
     call.on('data', (req: DiscountRequest) => {
@@ -44,8 +47,8 @@ class Discounter implements IDiscountServiceServer {
     });
   }
 
-  public getDiscountStreamResponse(call: ServerWritableStream<DiscountRequest, Discount>): void {
-    logger.info('Discounter:getDiscountStreamResponse', call.request.toObject());
+  public getDiscountCheckoutStreamResponse(call: ServerWritableStream<DiscountRequest, Discount>): void {
+    logger.info('Discounter:getDiscountCheckoutStreamResponse', call.request.toObject());
 
     const name = call.request.getProductid();
 
@@ -57,8 +60,8 @@ class Discounter implements IDiscountServiceServer {
     call.end();
   }
 
-  public getDiscountStream(call: ServerDuplexStream<DiscountRequest, Discount>): void {
-    logger.info('Discounter:getDiscountStream:', call.getPeer());
+  public getDiscountCheckoutStream(call: ServerDuplexStream<DiscountRequest, Discount>): void {
+    logger.info('Discounter:getDiscountCheckoutStream:', call.getPeer());
 
     call.on('data', (req: DiscountRequest) => {
       const res = new Discount();
@@ -67,7 +70,7 @@ class Discounter implements IDiscountServiceServer {
     }).on('end', () => {
       call.end();
     }).on('error', (err: Error) => {
-      logger.error('getDiscountStream:', err);
+      logger.error('getDiscountCheckoutStream:', err);
     });
   }
 }

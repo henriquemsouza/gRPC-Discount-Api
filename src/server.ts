@@ -1,8 +1,10 @@
 import { Server, ServerCredentials } from '@grpc/grpc-js';
+import { DiscountService } from '@models/discount_grpc_pb';
+import { Discount } from '@services/discount';
 
 import { LocalhostUrl } from '@utils/infra/utils';
 import { logger } from '@utils/logger';
-import { Discounter, DiscountServiceService as DiscountService } from './services/discount/Discounter';
+import { Discounter, DiscountServiceService } from './services/discount/Discounter';
 
 import { Health, HealthService, healthStatus, ServingStatus } from './services/Health';
 
@@ -12,7 +14,8 @@ const server = new Server({
 });
 
 server.addService(HealthService, new Health());
-server.addService(DiscountService, new Discounter());
+server.addService(DiscountServiceService, new Discounter());
+server.addService(DiscountService, new Discount());
 
 server.bindAsync(
   LocalhostUrl,

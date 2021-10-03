@@ -6,91 +6,42 @@
 
 import * as jspb from "google-protobuf";
 
-export class DiscountRequest extends jspb.Message { 
+export class GetDiscountRequest extends jspb.Message { 
     getProductid(): number;
-    setProductid(value: number): DiscountRequest;
+    setProductid(value: number): GetDiscountRequest;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): DiscountRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: DiscountRequest): DiscountRequest.AsObject;
+    toObject(includeInstance?: boolean): GetDiscountRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetDiscountRequest): GetDiscountRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: DiscountRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): DiscountRequest;
-    static deserializeBinaryFromReader(message: DiscountRequest, reader: jspb.BinaryReader): DiscountRequest;
+    static serializeBinaryToWriter(message: GetDiscountRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetDiscountRequest;
+    static deserializeBinaryFromReader(message: GetDiscountRequest, reader: jspb.BinaryReader): GetDiscountRequest;
 }
 
-export namespace DiscountRequest {
+export namespace GetDiscountRequest {
     export type AsObject = {
         productid: number,
     }
 }
 
-export class Product extends jspb.Message { 
-    getId(): number;
-    setId(value: number): Product;
-    getQuantity(): number;
-    setQuantity(value: number): Product;
-    getUnitAmount(): number;
-    setUnitAmount(value: number): Product;
-    getTotalAmount(): number;
-    setTotalAmount(value: number): Product;
-    getDiscount(): number;
-    setDiscount(value: number): Product;
-    getIsGift(): boolean;
-    setIsGift(value: boolean): Product;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): Product.AsObject;
-    static toObject(includeInstance: boolean, msg: Product): Product.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: Product, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): Product;
-    static deserializeBinaryFromReader(message: Product, reader: jspb.BinaryReader): Product;
-}
-
-export namespace Product {
-    export type AsObject = {
-        id: number,
-        quantity: number,
-        unitAmount: number,
-        totalAmount: number,
-        discount: number,
-        isGift: boolean,
-    }
-}
-
-export class Discount extends jspb.Message { 
-    clearProductsList(): void;
-    getProductsList(): Array<Product>;
-    setProductsList(value: Array<Product>): Discount;
-    addProducts(value?: Product, index?: number): Product;
+export class GetDiscountResponse extends jspb.Message { 
     getPercentage(): number;
-    setPercentage(value: number): Discount;
-    getTotalAmount(): number;
-    setTotalAmount(value: number): Discount;
-    getTotalAmountWithDiscount(): number;
-    setTotalAmountWithDiscount(value: number): Discount;
-    getTotalDiscount(): number;
-    setTotalDiscount(value: number): Discount;
+    setPercentage(value: number): GetDiscountResponse;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): Discount.AsObject;
-    static toObject(includeInstance: boolean, msg: Discount): Discount.AsObject;
+    toObject(includeInstance?: boolean): GetDiscountResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: GetDiscountResponse): GetDiscountResponse.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: Discount, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): Discount;
-    static deserializeBinaryFromReader(message: Discount, reader: jspb.BinaryReader): Discount;
+    static serializeBinaryToWriter(message: GetDiscountResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetDiscountResponse;
+    static deserializeBinaryFromReader(message: GetDiscountResponse, reader: jspb.BinaryReader): GetDiscountResponse;
 }
 
-export namespace Discount {
+export namespace GetDiscountResponse {
     export type AsObject = {
-        productsList: Array<Product.AsObject>,
         percentage: number,
-        totalAmount: number,
-        totalAmountWithDiscount: number,
-        totalDiscount: number,
     }
 }
