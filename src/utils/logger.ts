@@ -1,45 +1,32 @@
-/* eslint-disable no-console */
-import { dirname } from 'path';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable no-unneeded-ternary */
+import { createLogger, format, transports } from 'winston';
 
-export type Parameter = [unknown?, ...unknown[]];
+const { printf, colorize } = format;
+const colorizer = colorize();
 
-export class Logger {
-  private readonly rootDir: string = dirname((<NodeModule>require.main).filename);
+const timestampFormatter = () => new Date().toLocaleString('pt-BR', {
+  timeZone: 'America/Sao_Paulo',
+});
 
-  constructor() {
-    if (process.env['pm_id']) {
-      this.rootDir = this.rootDir.replace('/dist', '/src');
-    }
-  }
+const consoleFormatter = printf(({ stack, level, message, label, timestamp }: { [key: string]: string }) => {
+  const levelLabelColorized = colorizer.colorize(level, `${level}:${label}`);
+  const timestampColorized = `\u{1b}[90;1m${new Date(timestamp).toLocaleTimeString('pt-BR', { hour12: false })}\u{1b}[0m`;
+  return `${timestampColorized} ${levelLabelColorized}: ${stack ? stack : message}`;
+});
 
-  public info(...args: Parameter): void {
-    args.push(`- ${this.trace()}`);
-    console.info(...args);
-  }
+const baseLogger = createLogger({
+  level: process.env['NODE_ENV'] === 'production' ? 'info' : 'debug',
+  defaultMeta: { label: 'main' },
+  format: format.combine(format.errors({ stack: true }), format.timestamp({ format: timestampFormatter })),
+});
 
-  public warn(...args: Parameter): void {
-    args.push(`- ${this.trace()}`);
-    console.warn(...args);
-  }
+export const jsonString = (obj: any) => `\n${JSON.stringify(obj, null, 2)}\n`;
 
-  public error(...args: Parameter): void {
-    args.push(`- ${this.trace()}`);
-    console.error(...args);
-  }
+baseLogger.add(
+  new transports.Console({
+    format: consoleFormatter,
+  }),
+);
 
-  private trace(): string {
-    const lines: string[] = (<string> new Error().stack).split('\n').slice(1);
-    const lineMatch: RegExpMatchArray | null = /at (?:(.+)\s+)?\(?(?:(.+?):(\d+):(\d+)|([^)]+))\)?/.exec(lines[2]);
-
-    if (!lineMatch || lineMatch[2] === null || lineMatch[3] === null) {
-      return '';
-    }
-
-    const fileName: string = lineMatch[2].split(this.rootDir)[1];
-    const line: string = lineMatch[3];
-
-    return `${fileName}:${line}`;
-  }
-}
-
-export const logger: Logger = new Logger();
+export const logger = baseLogger;

@@ -29,6 +29,7 @@ export default class CalculateDiscountImpl extends CalculateDiscount {
       this.buildTotalAmount(products, discount);
 
       this.buildTotalValues(products, discount);
+      logger.info('success', discount);
       return discount;
     } catch (error) {
       logger.error('CalculateDiscountImpl:', error);
